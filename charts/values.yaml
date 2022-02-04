@@ -1,0 +1,66 @@
+image:
+  repository: rudder
+  pullPolicy: IfNotPresent
+  tag: latest
+imagePullSecrets: []
+
+replicaCount: 1
+
+livenessProbe:
+  httpGet:
+    port: http
+    path: /healthz
+  initialDelaySeconds: 5
+  periodSeconds: 5
+  timeoutSeconds: 10
+  failureThreshold: 3
+  successThreshold: 1
+readinessProbe:
+  httpGet:
+    port: http
+    path: /readyz
+  initialDelaySeconds: 5
+  periodSeconds: 5
+  timeoutSeconds: 10
+  failureThreshold: 3
+  successThreshold: 1
+
+serviceAccount:
+  annotations: {}
+  create: true
+  name:
+
+rbac:
+  create: true
+
+podAnnotations: {}
+podSecurityContext: {}
+securityContext: {}
+
+# Declare the list of environment variables
+# used by the application container.
+# Must be an array of corev1.EnvVar objects.
+# see https://pkg.go.dev/k8s.io/api/core/v1#EnvVar
+environment: []
+secret: {}
+spec: {}
+
+service:
+  type: ClusterIP
+  port: 8080
+containerPort: 8081
+
+resources:
+  limits:
+    cpu: 500m
+    memory: 512Mi
+  requests:
+    cpu: 200m
+    memory: 256Mi
+
+nodeSelector: {}
+tolerations: []
+affinity: {}
+
+nameOverride: ""
+fullnameOverride: ""

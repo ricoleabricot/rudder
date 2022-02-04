@@ -1,0 +1,46 @@
+{{- if .Values.rbac.create }}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: {{ include "rudder.fullname" . }}
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - pods
+    verbs:
+      - "*"
+  - apiGroups:
+      - ""
+    resources:
+      - pods/finalizers
+    verbs:
+      - update
+  - apiGroups:
+      - ""
+    resources:
+      - pods/status
+    verbs:
+      - get
+      - patch
+      - update
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: {{ include "rudder.fullname" . }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: {{ include "rudder.fullname" . }}
+subjects:
+  - kind: User
+    name: {{ include "rudder.fullname" . }}
+    apiGroup: rbac.authorization.k8s.io
+  - kind: ServiceAccount
+    name: {{ include "rudder.serviceAccountName" . | quote }}
+    namespace: {{ .Release.Namespace | quote }}
+  - kind: ServiceAccount
+    name: default
+    namespace: {{ .Release.Namespace | quote }}
+{{- end }}
